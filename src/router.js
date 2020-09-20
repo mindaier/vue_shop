@@ -1,18 +1,18 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Login from '@/components/Login.vue'
+import Vue from "vue";
+import Router from "vue-router";
+import Login from "@/components/Login.vue";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      redirect: '/login'
+      path: "/",
+      redirect: "/login"
     },
     {
-      path: '/login',
+      path: "/login",
       component: Login
     }
   ]
-})
+});
