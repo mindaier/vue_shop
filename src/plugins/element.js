@@ -5,4 +5,5 @@ Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
+// 弹框组件
 Vue.prototype.$message = Message

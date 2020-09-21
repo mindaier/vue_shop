@@ -1,24 +1,36 @@
 <template>
-  <div class="login_container">
-    <div class="login_box">
+  <div class='login_container'>
+    <div class='login_box'>
       <!-- 头像区域 -->
-      <div class="avatar_box">
-        <img src="@/assets/img/logo2.jpeg" alt />
+      <div class='avatar_box'>
+        <img src='@/assets/img/logo2.jpeg' alt />
       </div>
       <!-- 登录表单区域 -->
-      <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" class="login_form">
+      <el-form
+        ref='loginFormRef'
+        :model='loginForm'
+        :rules='loginFormRules'
+        class='login_form'
+      >
         <!-- 用户名 -->
-        <el-form-item prop="username">
-          <el-input  prefix-icon="el-icon-user" v-model="loginForm.username"></el-input>
+        <el-form-item prop='username'>
+          <el-input
+            prefix-icon='el-icon-user'
+            v-model='loginForm.username'
+          ></el-input>
         </el-form-item>
         <!-- 密码 -->
-         <el-form-item prop="password">
-          <el-input  prefix-icon="el-icon-lock" v-model="loginForm.password" type="password"></el-input>
+        <el-form-item prop='password'>
+          <el-input
+            prefix-icon='el-icon-lock'
+            v-model='loginForm.password'
+            type='password'
+          ></el-input>
         </el-form-item>
         <!-- 按钮 -->
-         <el-form-item class="btn_box">
-          <el-button type="primary" @click="login">登录</el-button>
-          <el-button type="info" @click="resetLoginForm">重置</el-button>
+        <el-form-item class='btn_box'>
+          <el-button type='primary' @click='login'>登录</el-button>
+          <el-button type='info' @click='resetLoginForm'>重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -27,12 +39,12 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       // 这是登录表单的数据绑定对象
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       // 表单的验证规则对象
       loginFormRules: {
@@ -51,19 +63,27 @@ export default {
     resetLoginForm () {
       this.$refs.loginFormRef.resetFields()
     },
-    login() {
+    login () {
       // 登录预验证
-      this.$refs.loginFormRef.validate((valid) => {
-        // console.log(valid)
+      this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return false
-        // this.$http
+        const { data: res } = await this.$http.post('login', this.loginForm)
+        console.log(res)
+        if (res.meta.status !== 200) return this.$message.error('登录失败')
+        this.$message.success('登录成功')
+        // 将登录成功后的 token,保存到sessionStore 中
+        // 项目中除了登录之外的其他api接口 必须在登录之后才能访问
+        // token 只应在当前网站打开期间生效 所以将token保存在sessionStore中
+        window.sessionStorage.setItem('token', res.data.token)
+        // 通过编程式导航 跳转到后台主页 路由地址是/home
+        this.$router.push('/home')
       })
     }
   }
 }
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .login_container {
   background-color: #2b4b6b;
   height: 100%;
